@@ -1,0 +1,6 @@
+@absence_tracker_HostAddress = http://localhost:5015
+
+GET {{absence_tracker_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
