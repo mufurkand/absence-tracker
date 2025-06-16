@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace absence_tracker.Models
@@ -21,6 +22,10 @@ namespace absence_tracker.Models
         [Required]
         [MaxLength(255)]
         public string Password { get; set; } = string.Empty;
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
 
         // Navigation property to the Course class
         public ICollection<Course> Courses { get; set; } = new List<Course>();
