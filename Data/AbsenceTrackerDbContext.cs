@@ -84,58 +84,6 @@ namespace absence_tracker.Data
             }
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
 
-            // Configure seeding using the recommended UseSeeding approach
-            optionsBuilder.UseSeeding((context, _) =>
-            {
-                SeedData(context);
-            });
-        }
-
-        private void SeedData(DbContext context)
-        {
-            var dbContext = (AbsenceTrackerDbContext)context;
-
-            // Check if admin user already exists to avoid duplicates
-            if (!dbContext.Users.Any(u => u.UserName == "admin"))
-            {
-                // Seed admin user
-                var adminUser = new User
-                {
-                    UserName = "admin",
-                    Email = "admin@example.com",
-                    EmailConfirmed = true,
-                    SecurityStamp = Guid.NewGuid().ToString()
-                };
-
-                dbContext.Users.Add(adminUser);
-                dbContext.SaveChanges();
-
-                // Seed courses for the admin user
-                var courses = new[]
-                {
-                    new Course
-                    {
-                        Name = "Mathematics",
-                        Description = "Advanced Mathematics Course",
-                        UserId = adminUser.Id,
-                        TotalAbsences = 0
-                    },
-                    new Course
-                    {
-                        Name = "Physics",
-                        Description = "Introduction to Physics",
-                        UserId = adminUser.Id,
-                        TotalAbsences = 0
-                    }
-                };
-
-                dbContext.Courses.AddRange(courses);
-                dbContext.SaveChanges();
-            }
-        }
     }
 }
