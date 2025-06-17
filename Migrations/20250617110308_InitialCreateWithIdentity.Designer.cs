@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using absence_tracker.Data;
@@ -11,9 +12,11 @@ using absence_tracker.Data;
 namespace absence_tracker.Migrations
 {
     [DbContext(typeof(AbsenceTrackerDbContext))]
-    partial class AbsenceTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250617110308_InitialCreateWithIdentity")]
+    partial class InitialCreateWithIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

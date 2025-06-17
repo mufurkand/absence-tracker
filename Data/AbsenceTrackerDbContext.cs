@@ -1,15 +1,15 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using absence_tracker.Models;
 
 namespace absence_tracker.Data
 {
-    public class AbsenceTrackerDbContext : DbContext
+    public class AbsenceTrackerDbContext : IdentityDbContext<User>
     {
         public AbsenceTrackerDbContext(DbContextOptions<AbsenceTrackerDbContext> options) : base(options)
         {
         }
 
-        public DbSet<User> Users { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Absence> Absences { get; set; }
 
@@ -100,14 +100,15 @@ namespace absence_tracker.Data
             var dbContext = (AbsenceTrackerDbContext)context;
 
             // Check if admin user already exists to avoid duplicates
-            if (!dbContext.Users.Any(u => u.Username == "admin"))
+            if (!dbContext.Users.Any(u => u.UserName == "admin"))
             {
                 // Seed admin user
                 var adminUser = new User
                 {
-                    Username = "admin",
+                    UserName = "admin",
                     Email = "admin@example.com",
-                    Password = "hashed_password_here" // In production, use proper password hashing
+                    EmailConfirmed = true,
+                    SecurityStamp = Guid.NewGuid().ToString()
                 };
 
                 dbContext.Users.Add(adminUser);

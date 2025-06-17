@@ -15,7 +15,7 @@ namespace absence_tracker.Models
         public string? Description { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         public int TotalAbsences { get; set; }
 
