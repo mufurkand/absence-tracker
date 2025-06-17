@@ -13,5 +13,12 @@ namespace absence_tracker.Controllers
         {
             _userService = userService;
         }
+
+        [HttpGet]
+        public IActionResult GetAllUsers()
+        {
+            var users = _userService.GetAllUsers();
+            return Ok(users);
+        }
     }
 }

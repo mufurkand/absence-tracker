@@ -4,6 +4,6 @@ namespace absence_tracker.Services
 {
     public interface IUserService
     {
-        // Add your service method signatures here
+        IEnumerable<User> GetAllUsers();
     }
 }
