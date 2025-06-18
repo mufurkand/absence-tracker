@@ -34,6 +34,29 @@ Update the `DefaultConnection` connection string with your PostgreSQL credential
 }
 ```
 
+### JWT Authentication Configuration
+
+Configure JWT settings for secure token-based authentication:
+
+```json
+{
+    "JwtSettings": {
+        "SecretKey": "your-super-secret-key-that-is-at-least-32-characters-long",
+        "Issuer": "YourAppName",
+        "Audience": "YourAppUsers",
+        "ExpirationInMinutes": 60
+    }
+}
+```
+
+**Important JWT Security Notes:**
+
+-   **SecretKey**: Must be at least 32 characters long for security
+-   **Use different keys** for Development and Production environments
+-   **Never commit actual secret keys** to version control
+-   **Production keys** should be randomly generated and stored securely
+-   **ExpirationInMinutes**: Consider shorter times (15-60 min) for production
+
 ### Environment Variables
 
 The application uses the `ASPNETCORE_ENVIRONMENT` variable to determine which configuration to load:
@@ -70,3 +93,41 @@ The `.env` file is used by `docker-compose.yml` and contains:
 -   **PGADMIN_DEFAULT_EMAIL** - Email for pgAdmin web interface login
 -   **PGADMIN_DEFAULT_PASSWORD** - Password for pgAdmin web interface
 -   **PGADMIN_PORT** - Port for pgAdmin web interface (default: 5050)
+
+## JWT Authentication Endpoints
+
+The application includes JWT-based authentication with the following endpoints:
+
+### Authentication Endpoints
+
+-   **POST** `/api/auth/login` - User login with email/password
+-   **POST** `/api/auth/register` - User registration
+-   **GET** `/api/auth/profile` - Get user profile (requires JWT token)
+-   **POST** `/api/auth/refresh` - Refresh JWT token (requires JWT token)
+
+### Using JWT Tokens
+
+1. **Login/Register** to receive a JWT token
+2. **Include the token** in the Authorization header for protected endpoints:
+    ```
+    Authorization: Bearer <your-jwt-token>
+    ```
+3. **Token expires** based on `ExpirationInMinutes` setting
+4. **Refresh token** before expiration to maintain authentication
+
+### Example API Calls
+
+**Login:**
+
+```bash
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "password123"}'
+```
+
+**Access Protected Endpoint:**
+
+```bash
+curl -X GET http://localhost:5000/api/auth/profile \
+  -H "Authorization: Bearer <your-jwt-token>"
+```
