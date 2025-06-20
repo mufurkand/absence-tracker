@@ -7,7 +7,6 @@ namespace absence_tracker.Controllers;
 
 /// <summary>
 /// Controller for authentication operations (login, register)
-/// This is a simple example controller to demonstrate JWT authentication
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
@@ -21,14 +20,13 @@ public class AuthController : ControllerBase
         _authService = authService;
         _logger = logger;
     }
-
     /// <summary>
-    /// Login endpoint that returns JWT token
+    /// Login endpoint for user authentication
     /// </summary>
-    /// <param name="loginRequest">Login credentials</param>
-    /// <returns>JWT token if authentication is successful</returns>
+    /// <param name="loginRequest">Login request containing username and password</param>
+    /// <returns>JWT token if login is successful</returns>
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequest)
+    public async Task<IActionResult> Login([FromBody] LoginDto loginRequest)
     {
         if (!ModelState.IsValid)
         {
@@ -46,12 +44,12 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Register endpoint that creates a new user and returns JWT token
+    /// Register endpoint for creating a new user account
     /// </summary>
-    /// <param name="registerRequest">Registration information</param>
-    /// <returns>JWT token if registration is successful</returns>
+    /// <param name="registerRequest">Registration request containing user details</param>
+    /// <returns>Success message if registration is successful</returns>
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequest)
+    public async Task<IActionResult> Register([FromBody] RegisterDto registerRequest)
     {
         if (!ModelState.IsValid)
         {
@@ -69,12 +67,11 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Protected endpoint that requires JWT authentication
-    /// This demonstrates how to protect routes with JWT
+    /// Get user profile endpoint (protected)
     /// </summary>
-    /// <returns>User information from JWT claims</returns>
+    /// <returns>User profile information if authenticated</returns>
     [HttpGet("profile")]
-    [Authorize] // This attribute requires a valid JWT token
+    [Authorize]
     public IActionResult GetProfile()
     {
         // Access user information from JWT claims

@@ -29,7 +29,7 @@ public class AuthService : IAuthService
     /// <summary>
     /// Authenticates a user and returns a JWT token
     /// </summary>
-    public async Task<ApiResponse<AuthResponseDto>> LoginAsync(LoginRequestDto loginRequest)
+    public async Task<ApiResponse<AuthDto>> LoginAsync(LoginDto loginRequest)
     {
         try
         {
@@ -38,7 +38,7 @@ public class AuthService : IAuthService
             if (user == null)
             {
                 _logger.LogWarning("Login attempt failed: User not found for email {Email}", loginRequest.Email);
-                return ApiResponse<AuthResponseDto>.ErrorResponse("Invalid email or password.");
+                return ApiResponse<AuthDto>.ErrorResponse("Invalid email or password.");
             }
 
             // Check password
@@ -53,14 +53,14 @@ public class AuthService : IAuthService
                 _logger.LogWarning("Login attempt failed for user {UserId}: {Reason}",
                     user.Id, result.IsLockedOut ? "Account locked" : "Invalid password");
 
-                return ApiResponse<AuthResponseDto>.ErrorResponse(errorMessage);
+                return ApiResponse<AuthDto>.ErrorResponse(errorMessage);
             }
 
             // Generate JWT token
             var token = await _jwtTokenService.GenerateTokenAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
 
-            var authResponse = new AuthResponseDto
+            var authResponse = new AuthDto
             {
                 Token = token,
                 Expiration = _jwtTokenService.GetTokenExpiration(),
@@ -71,19 +71,19 @@ public class AuthService : IAuthService
             };
 
             _logger.LogInformation("User {UserId} successfully logged in", user.Id);
-            return ApiResponse<AuthResponseDto>.SuccessResponse(authResponse, "Login successful.");
+            return ApiResponse<AuthDto>.SuccessResponse(authResponse, "Login successful.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during login attempt for email {Email}", loginRequest.Email);
-            return ApiResponse<AuthResponseDto>.ErrorResponse("An error occurred during login.");
+            return ApiResponse<AuthDto>.ErrorResponse("An error occurred during login.");
         }
     }
 
     /// <summary>
     /// Registers a new user and returns a JWT token
     /// </summary>
-    public async Task<ApiResponse<AuthResponseDto>> RegisterAsync(RegisterRequestDto registerRequest)
+    public async Task<ApiResponse<AuthDto>> RegisterAsync(RegisterDto registerRequest)
     {
         try
         {
@@ -91,13 +91,13 @@ public class AuthService : IAuthService
             var existingUser = await _userManager.FindByEmailAsync(registerRequest.Email);
             if (existingUser != null)
             {
-                return ApiResponse<AuthResponseDto>.ErrorResponse("A user with this email already exists.");
+                return ApiResponse<AuthDto>.ErrorResponse("A user with this email already exists.");
             }
 
             existingUser = await _userManager.FindByNameAsync(registerRequest.Username);
             if (existingUser != null)
             {
-                return ApiResponse<AuthResponseDto>.ErrorResponse("A user with this username already exists.");
+                return ApiResponse<AuthDto>.ErrorResponse("A user with this username already exists.");
             }
 
             // Create new user
@@ -116,14 +116,14 @@ public class AuthService : IAuthService
                 _logger.LogWarning("User registration failed for email {Email}: {Errors}",
                     registerRequest.Email, string.Join(", ", errors));
 
-                return ApiResponse<AuthResponseDto>.ErrorResponse("Registration failed.", errors);
+                return ApiResponse<AuthDto>.ErrorResponse("Registration failed.", errors);
             }
 
             // Generate JWT token for the new user
             var token = await _jwtTokenService.GenerateTokenAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
 
-            var authResponse = new AuthResponseDto
+            var authResponse = new AuthDto
             {
                 Token = token,
                 Expiration = _jwtTokenService.GetTokenExpiration(),
@@ -134,33 +134,34 @@ public class AuthService : IAuthService
             };
 
             _logger.LogInformation("User {UserId} successfully registered", user.Id);
-            return ApiResponse<AuthResponseDto>.SuccessResponse(authResponse, "Registration successful.");
+            return ApiResponse<AuthDto>.SuccessResponse(authResponse, "Registration successful.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during registration for email {Email}", registerRequest.Email);
-            return ApiResponse<AuthResponseDto>.ErrorResponse("An error occurred during registration.");
+            return ApiResponse<AuthDto>.ErrorResponse("An error occurred during registration.");
         }
     }
 
+    // TODO: proper refresh token implementation with database storage
     /// <summary>
     /// Refreshes a JWT token for an existing user
     /// </summary>
-    public async Task<ApiResponse<AuthResponseDto>> RefreshTokenAsync(string userId)
+    public async Task<ApiResponse<AuthDto>> RefreshTokenAsync(string userId)
     {
         try
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return ApiResponse<AuthResponseDto>.ErrorResponse("User not found.");
+                return ApiResponse<AuthDto>.ErrorResponse("User not found.");
             }
 
             // Generate new JWT token
             var token = await _jwtTokenService.GenerateTokenAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
 
-            var authResponse = new AuthResponseDto
+            var authResponse = new AuthDto
             {
                 Token = token,
                 Expiration = _jwtTokenService.GetTokenExpiration(),
@@ -171,12 +172,12 @@ public class AuthService : IAuthService
             };
 
             _logger.LogInformation("Token refreshed for user {UserId}", user.Id);
-            return ApiResponse<AuthResponseDto>.SuccessResponse(authResponse, "Token refreshed successfully.");
+            return ApiResponse<AuthDto>.SuccessResponse(authResponse, "Token refreshed successfully.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error refreshing token for user {UserId}", userId);
-            return ApiResponse<AuthResponseDto>.ErrorResponse("An error occurred during token refresh.");
+            return ApiResponse<AuthDto>.ErrorResponse("An error occurred during token refresh.");
         }
     }
 }

@@ -1,6 +1,42 @@
 @absence_tracker_HostAddress = http://localhost:5015
 
-GET {{absence_tracker_HostAddress}}/api/users/
-Accept: application/json
+### Register a new user
+POST {{absence_tracker_HostAddress}}/api/auth/register
+Content-Type: application/json
 
-###
+{
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "TestPassword123!",
+  "confirmPassword": "TestPassword123!"
+}
+
+### Login and store JWT token
+# @name login
+POST {{absence_tracker_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "TestPassword123!"
+}
+
+### Get user profile (protected route using JWT token)
+GET {{absence_tracker_HostAddress}}/api/auth/profile
+Accept: application/json
+Authorization: Bearer {{login.response.body.data.token}}
+
+### Refresh token (protected route)
+POST {{absence_tracker_HostAddress}}/api/auth/refresh
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.data.token}}
+
+### Create a new course (protected route)
+POST {{absence_tracker_HostAddress}}/api/courses/create
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.data.token}}
+
+{
+  "name": "Mathematics 101",
+  "description": "Introduction to Mathematics - Basic concepts and fundamentals"
+}

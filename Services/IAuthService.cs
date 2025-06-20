@@ -12,19 +12,19 @@ public interface IAuthService
     /// </summary>
     /// <param name="loginRequest">Login credentials</param>
     /// <returns>Authentication response with JWT token if successful</returns>
-    Task<ApiResponse<AuthResponseDto>> LoginAsync(LoginRequestDto loginRequest);
+    Task<ApiResponse<AuthDto>> LoginAsync(LoginDto loginRequest);
 
     /// <summary>
     /// Registers a new user
     /// </summary>
     /// <param name="registerRequest">Registration information</param>
     /// <returns>Authentication response with JWT token if successful</returns>
-    Task<ApiResponse<AuthResponseDto>> RegisterAsync(RegisterRequestDto registerRequest);
+    Task<ApiResponse<AuthDto>> RegisterAsync(RegisterDto registerRequest);
 
     /// <summary>
     /// Refreshes a JWT token (optional implementation for token refresh)
     /// </summary>
     /// <param name="userId">User ID to refresh token for</param>
     /// <returns>New authentication response with refreshed token</returns>
-    Task<ApiResponse<AuthResponseDto>> RefreshTokenAsync(string userId);
+    Task<ApiResponse<AuthDto>> RefreshTokenAsync(string userId);
 }

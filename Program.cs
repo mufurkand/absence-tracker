@@ -6,6 +6,7 @@ using System.Text;
 using absence_tracker.Data;
 using absence_tracker.Models;
 using absence_tracker.Services;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,9 +87,9 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Register services
-builder.Services.AddScoped<absence_tracker.Services.IUserService, absence_tracker.Services.UserService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
 
 var app = builder.Build();
 
@@ -96,6 +97,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(); // Modern API documentation UI
 }
 
 app.UseHttpsRedirection();
