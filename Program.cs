@@ -7,12 +7,16 @@ using absence_tracker.Data;
 using absence_tracker.Models;
 using absence_tracker.Services;
 using Scalar.AspNetCore;
+using absence_tracker.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<BearerSecuritySchemeDocumentTransformer>();
+});
 builder.Services.AddControllers();
 
 // Configure Entity Framework
