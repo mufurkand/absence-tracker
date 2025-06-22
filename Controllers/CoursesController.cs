@@ -35,5 +35,77 @@ namespace absence_tracker.Controllers
             }
             return BadRequest(response);
         }
+
+        [HttpDelete("delete/{courseId}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteCourse(int courseId)
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new ApiResponse<string> { Success = false, Message = "User not authenticated." });
+            }
+
+            var response = await _courseService.DeleteCourseAsync(courseId, userId);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [HttpGet("all")]
+        [Authorize]
+        public async Task<IActionResult> GetAllCourses()
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new ApiResponse<string> { Success = false, Message = "User not authenticated." });
+            }
+
+            var response = await _courseService.GetAllCoursesByUserIdAsync(userId);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [HttpGet("{courseId}")]
+        [Authorize]
+        public async Task<IActionResult> GetCourseById(int courseId)
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new ApiResponse<string> { Success = false, Message = "User not authenticated." });
+            }
+
+            var response = await _courseService.GetCourseByIdAsync(courseId, userId);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [HttpPut("update/{courseId}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateCourse(int courseId, [FromBody] UpdateCourseDto updateCourseDto)
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new ApiResponse<string> { Success = false, Message = "User not authenticated." });
+            }
+
+            var response = await _courseService.UpdateCourseAsync(courseId, updateCourseDto, userId);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
     }
 }

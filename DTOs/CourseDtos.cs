@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace absence_tracker.DTOs;
 
 public class CourseDto
@@ -38,11 +40,15 @@ public class CreateCourseDto
     /// <summary>
     /// Name of the course
     /// </summary>
+    [Description("Name of the course")]
+    [DefaultValue("Introduction to Programming")]
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Description of the course
     /// </summary>
+    [Description("Description of the course")]
+    [DefaultValue("This course covers the basics of programming using C#.")]
     public string? Description { get; set; }
 }
 
