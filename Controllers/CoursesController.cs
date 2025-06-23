@@ -10,7 +10,7 @@ namespace absence_tracker.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class CoursesController : ControllerBase
+    public class CoursesController : BaseController
     {
         private readonly ICourseService _courseService;
         public CoursesController(ICourseService courseService)
@@ -22,13 +22,10 @@ namespace absence_tracker.Controllers
         [Authorize]
         public async Task<IActionResult> CreateCourse([FromBody] CreateCourseDto courseRegisterDto)
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized(new ApiResponse<string> { Success = false, Message = "User not authenticated." });
-            }
+            var (userId, unauthorizedResponse) = GetAuthenticatedUserId();
+            if (unauthorizedResponse != null) return unauthorizedResponse;
 
-            var response = await _courseService.CreateCourseAsync(courseRegisterDto, userId);
+            var response = await _courseService.CreateCourseAsync(courseRegisterDto, userId!);
             if (response.Success)
             {
                 return Ok(response);
@@ -40,13 +37,10 @@ namespace absence_tracker.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteCourse(int courseId)
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized(new ApiResponse<string> { Success = false, Message = "User not authenticated." });
-            }
+            var (userId, unauthorizedResponse) = GetAuthenticatedUserId();
+            if (unauthorizedResponse != null) return unauthorizedResponse;
 
-            var response = await _courseService.DeleteCourseAsync(courseId, userId);
+            var response = await _courseService.DeleteCourseAsync(courseId, userId!);
             if (response.Success)
             {
                 return Ok(response);
@@ -58,13 +52,10 @@ namespace absence_tracker.Controllers
         [Authorize]
         public async Task<IActionResult> GetAllCourses()
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized(new ApiResponse<string> { Success = false, Message = "User not authenticated." });
-            }
+            var (userId, unauthorizedResponse) = GetAuthenticatedUserId();
+            if (unauthorizedResponse != null) return unauthorizedResponse;
 
-            var response = await _courseService.GetAllCoursesByUserIdAsync(userId);
+            var response = await _courseService.GetAllCoursesByUserIdAsync(userId!);
             if (response.Success)
             {
                 return Ok(response);
@@ -76,13 +67,10 @@ namespace absence_tracker.Controllers
         [Authorize]
         public async Task<IActionResult> GetCourseById(int courseId)
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized(new ApiResponse<string> { Success = false, Message = "User not authenticated." });
-            }
+            var (userId, unauthorizedResponse) = GetAuthenticatedUserId();
+            if (unauthorizedResponse != null) return unauthorizedResponse;
 
-            var response = await _courseService.GetCourseByIdAsync(courseId, userId);
+            var response = await _courseService.GetCourseByIdAsync(courseId, userId!);
             if (response.Success)
             {
                 return Ok(response);
@@ -94,13 +82,10 @@ namespace absence_tracker.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateCourse(int courseId, [FromBody] UpdateCourseDto updateCourseDto)
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized(new ApiResponse<string> { Success = false, Message = "User not authenticated." });
-            }
+            var (userId, unauthorizedResponse) = GetAuthenticatedUserId();
+            if (unauthorizedResponse != null) return unauthorizedResponse;
 
-            var response = await _courseService.UpdateCourseAsync(courseId, updateCourseDto, userId);
+            var response = await _courseService.UpdateCourseAsync(courseId, updateCourseDto, userId!);
             if (response.Success)
             {
                 return Ok(response);

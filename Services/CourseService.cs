@@ -13,7 +13,7 @@ namespace absence_tracker.Services
             _context = context;
         }
 
-        public async Task<ApiResponse<CourseDto>> CreateCourseAsync(CreateCourseDto courseRegisterDto, string userId)
+        public async Task<ApiResponse<CourseDto>> CreateCourseAsync(CreateCourseDto createCourseDto, string userId)
         {
             var response = new ApiResponse<CourseDto>();
 
@@ -21,8 +21,8 @@ namespace absence_tracker.Services
             {
                 var course = new Course
                 {
-                    Name = courseRegisterDto.Name,
-                    Description = courseRegisterDto.Description,
+                    Name = createCourseDto.Name,
+                    Description = createCourseDto.Description,
                     UserId = userId,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
@@ -152,7 +152,7 @@ namespace absence_tracker.Services
             return response;
         }
 
-        public async Task<ApiResponse<CourseDto>> UpdateCourseAsync(int courseId, UpdateCourseDto courseUpdateDto, string userId)
+        public async Task<ApiResponse<CourseDto>> UpdateCourseAsync(int courseId, UpdateCourseDto updateCourseDto, string userId)
         {
             var response = new ApiResponse<CourseDto>();
 
@@ -167,8 +167,8 @@ namespace absence_tracker.Services
                 }
 
                 // Update properties
-                course.Name = courseUpdateDto.Name;
-                course.Description = courseUpdateDto.Description;
+                course.Name = updateCourseDto.Name;
+                course.Description = updateCourseDto.Description;
                 course.UpdatedAt = DateTime.UtcNow;
 
                 _context.Courses.Update(course);

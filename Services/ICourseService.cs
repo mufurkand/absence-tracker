@@ -6,8 +6,8 @@ namespace absence_tracker.Services
     {
         Task<ApiResponse<List<CourseDto>>> GetAllCoursesByUserIdAsync(string userId);
         Task<ApiResponse<CourseDto>> GetCourseByIdAsync(int courseId, string userId);
-        Task<ApiResponse<CourseDto>> CreateCourseAsync(CreateCourseDto courseRegisterDto, string userId);
-        Task<ApiResponse<CourseDto>> UpdateCourseAsync(int courseId, UpdateCourseDto courseUpdateDto, string userId);
+        Task<ApiResponse<CourseDto>> CreateCourseAsync(CreateCourseDto createCourseDto, string userId);
+        Task<ApiResponse<CourseDto>> UpdateCourseAsync(int courseId, UpdateCourseDto updateCourseDto, string userId);
         Task<ApiResponse<bool>> DeleteCourseAsync(int courseId, string userId);
     }
 }

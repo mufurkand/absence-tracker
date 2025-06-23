@@ -94,6 +94,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IAbsenceService, AbsenceService>();
 
 var app = builder.Build();
 
