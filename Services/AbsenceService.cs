@@ -29,16 +29,10 @@ namespace absence_tracker.Services
                     return response;
                 }
 
-                // Convert Date to UTC to ensure compatibility with PostgreSQL
-                // TODO: a better alternative?
-                var utcDate = createAbsenceDto.Date.Kind == DateTimeKind.Unspecified
-                    ? DateTime.SpecifyKind(createAbsenceDto.Date, DateTimeKind.Utc)
-                    : createAbsenceDto.Date.ToUniversalTime();
-
                 var absence = new Absence
                 {
                     CourseId = createAbsenceDto.CourseId,
-                    Date = utcDate,
+                    Date = createAbsenceDto.Date,
                     Reason = createAbsenceDto.Reason
                 };
 

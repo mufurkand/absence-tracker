@@ -7,7 +7,7 @@ namespace absence_tracker.DTOs
     {
         public int Id { get; set; }
         public int CourseId { get; set; }
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
         public string? Reason { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
@@ -24,8 +24,8 @@ namespace absence_tracker.DTOs
         // TODO: use DateOnly?
         [Required]
         [Description("Absence date (will be converted to UTC if not already)")]
-        [DefaultValue(typeof(DateTime), "2025-06-23T00:00:00Z")]
-        public DateTime Date { get; set; }
+        [DefaultValue(typeof(DateOnly), "2025-06-23")]
+        public DateOnly Date { get; set; }
 
         [MaxLength(500)]
         [Description("Reason of the absence")]

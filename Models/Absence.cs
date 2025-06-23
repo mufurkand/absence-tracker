@@ -11,7 +11,7 @@ namespace absence_tracker.Models
         public int CourseId { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
 
         [MaxLength(500)]
         public string? Reason { get; set; }
