@@ -50,7 +50,7 @@ namespace absence_tracker.Controllers
 
         [HttpGet("all")]
         [Authorize]
-        public async Task<IActionResult> GetAllCourses()
+        public async Task<IActionResult> GetAllCoursesByUserId()
         {
             var (userId, unauthorizedResponse) = GetAuthenticatedUserId();
             if (unauthorizedResponse != null) return unauthorizedResponse;

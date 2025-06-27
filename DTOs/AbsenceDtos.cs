@@ -32,4 +32,8 @@ namespace absence_tracker.DTOs
         [DefaultValue("Fell asleep")]
         public string? Reason { get; set; }
     }
+
+    public class UpdateAbsenceDto : CreateAbsenceDto
+    {
+    }
 }

@@ -15,7 +15,7 @@ namespace absence_tracker.Controllers
             _absenceService = absenceService;
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         [Authorize]
         public async Task<IActionResult> CreateAbsence([FromBody] CreateAbsenceDto createAbsenceDto)
         {
@@ -23,6 +23,66 @@ namespace absence_tracker.Controllers
             if (unauthorizedResponse != null) return unauthorizedResponse;
 
             var response = await _absenceService.CreateAbsenceAsync(createAbsenceDto, userId!);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [HttpDelete("delete/{absenceId}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteAbsence(int absenceId)
+        {
+            var (userId, unauthorizedResponse) = GetAuthenticatedUserId();
+            if (unauthorizedResponse != null) return unauthorizedResponse;
+
+            var response = await _absenceService.DeleteAbsenceAsync(absenceId, userId!);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [HttpGet("course/{courseId}")]
+        [Authorize]
+        public async Task<IActionResult> GetAllAbsencesByCourseId(int courseId)
+        {
+            var (userId, unauthorizedResponse) = GetAuthenticatedUserId();
+            if (unauthorizedResponse != null) return unauthorizedResponse;
+
+            var response = await _absenceService.GetAllAbsencesByCourseIdAsync(courseId, userId!);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [HttpGet("{absenceId}")]
+        [Authorize]
+        public async Task<IActionResult> GetAbsenceById(int absenceId)
+        {
+            var (userId, unauthorizedResponse) = GetAuthenticatedUserId();
+            if (unauthorizedResponse != null) return unauthorizedResponse;
+
+            var response = await _absenceService.GetAbsenceByIdAsync(absenceId, userId!);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [HttpPost("update/{absenceId}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateAbsence(int absenceId, [FromBody] UpdateAbsenceDto updateAbsenceDto)
+        {
+            var (userId, unauthorizedResponse) = GetAuthenticatedUserId();
+            if (unauthorizedResponse != null) return unauthorizedResponse;
+
+            var response = await _absenceService.UpdateAbsenceAsync(absenceId, updateAbsenceDto, userId!);
             if (response.Success)
             {
                 return Ok(response);
